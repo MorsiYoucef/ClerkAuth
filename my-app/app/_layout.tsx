@@ -1,12 +1,9 @@
 import 'react-native-url-polyfill/auto'
-import { Slot } from 'expo-router'
-import {
-  ClerkProvider,
-  ClerkLoaded,
-  SignedOut,
-  SignedIn,
-} from '@clerk/clerk-expo'
-import LoginScreen from './(auth)/LoginScreen'
+import { Slot, Stack } from 'expo-router'
+import { ClerkProvider, SignedOut, SignedIn } from '@clerk/clerk-expo'
+import * as Font from 'expo-font'
+import React, { useEffect, useState } from 'react'
+import AppLoading from 'expo-app-loading'
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
@@ -16,14 +13,33 @@ if (!publishableKey) {
   )
 }
 
+const loadFonts = async () => {
+  await Font.loadAsync({
+    Outfit: require('../assets/fonts/Outfit-Regular.ttf'),
+    'Outfit-Bold': require('../assets/fonts/Outfit-Bold.ttf'),
+    'Outfit-Med': require('../assets/fonts/Outfit-Medium.ttf'),
+  })
+}
+
 export default function RootLayout() {
+  const [fontsLoaded, setFontsLoaded] = useState(false)
+
+  useEffect(() => {
+    loadFonts().then(() => setFontsLoaded(true))
+  }, [])
+
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
   return (
     <ClerkProvider publishableKey={publishableKey}>
       <SignedIn>
-        <Slot />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
       </SignedIn>
       <SignedOut>
-        <LoginScreen />
+        <Slot />
       </SignedOut>
     </ClerkProvider>
   )
