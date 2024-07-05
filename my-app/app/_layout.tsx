@@ -1,34 +1,12 @@
 import 'react-native-url-polyfill/auto'
-import { Stack } from 'expo-router'
-import React, { useState, useEffect } from 'react'
-import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo'
-import LoginScreen from '../components/LoginScreen'
-import * as SecureStore from 'expo-secure-store'
-
-const tokenCache = {
-  async getToken(key: string) {
-    try {
-      const item = await SecureStore.getItemAsync(key)
-      if (item) {
-        console.log(`${key} was used 🔐 \n`)
-      } else {
-        console.log('No values stored under key: ' + key)
-      }
-      return item
-    } catch (error) {
-      console.error('SecureStore get item error: ', error)
-      await SecureStore.deleteItemAsync(key)
-      return null
-    }
-  },
-  async saveToken(key: string, value: string) {
-    try {
-      return SecureStore.setItemAsync(key, value)
-    } catch (err) {
-      return
-    }
-  },
-}
+import { Slot } from 'expo-router'
+import {
+  ClerkProvider,
+  ClerkLoaded,
+  SignedOut,
+  SignedIn,
+} from '@clerk/clerk-expo'
+import LoginScreen from './(auth)/LoginScreen'
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
@@ -40,11 +18,9 @@ if (!publishableKey) {
 
 export default function RootLayout() {
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+    <ClerkProvider publishableKey={publishableKey}>
       <SignedIn>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <Slot />
       </SignedIn>
       <SignedOut>
         <LoginScreen />

@@ -57,7 +57,15 @@ export default function SignUpScreen() {
   }
 
   return (
-    <View>
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        padding: 10,
+        marginTop: '50%',
+        gap: 10,
+      }}
+    >
       {!pendingVerification && (
         <>
           <TextInput

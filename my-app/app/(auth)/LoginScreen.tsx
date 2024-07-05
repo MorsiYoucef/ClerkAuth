@@ -9,55 +9,24 @@ import {
 import { Image } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 import { useOAuth } from '@clerk/clerk-expo'
-import * as Linking from 'expo-linking'
+// import * as Linking from 'expo-linking'
 import React from 'react'
 import { useRouter } from 'expo-router'
 
-export const useWarmUpBrowser = () => {
-  React.useEffect(() => {
-    if (Platform.OS !== 'web') {
-      // Warm up the android browser to improve UX
-      // https://docs.expo.dev/guides/authentication/#improving-user-experience
-      void WebBrowser.warmUpAsync()
-      return () => {
-        void WebBrowser.coolDownAsync()
-      }
-    }
-  }, [])
-}
-
-WebBrowser.maybeCompleteAuthSession()
-
 const LoginScreen = () => {
   const router = useRouter()
-  useWarmUpBrowser()
-
-  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
-
-  const onPress = React.useCallback(async () => {
+  const onPress = () => {
     try {
-      const { createdSessionId, signIn, signUp, setActive } =
-        await startOAuthFlow({
-          redirectUrl: Linking.createURL('/dashboard', { scheme: 'myapp' }),
-        })
-
-      if (createdSessionId) {
-        setActive!({ session: createdSessionId })
-      } else {
-        // Use signIn or signUp for next steps such as MFA
-      }
-    } catch (err) {
-      console.error('OAuth error', err)
+      router.push('/(auth)/sign-in')
+    } catch (error) {
+      console.log(error)
     }
-  }, [startOAuthFlow])
+  }
 
   return (
     <View>
-      <View style={styles.subContainer1}>
-        {/* <Image
-          source={require('../assets/images/login.png')}
-          style={styles.image}
-        /> */}
+      <View>
+        <Image source={require('./../../assets/images/group-1.png')} />
       </View>
       <View style={styles.subContainer2}>
         <Text style={styles.text2}>
@@ -74,10 +43,7 @@ const LoginScreen = () => {
           Find your favorite business near you and post your own business to
           your community
         </Text>
-        <TouchableOpacity
-          onPress={() => router.push('/home')}
-          style={styles.btn}
-        >
+        <TouchableOpacity onPress={onPress} style={styles.btn}>
           <Text
             style={{
               textAlign: 'center',
@@ -114,7 +80,7 @@ const styles = StyleSheet.create({
   subContainer2: {
     backgroundColor: '#fff',
     padding: 20,
-    marginTop: -30,
+    marginTop: 0,
   },
   image: {
     width: 220,

@@ -35,7 +35,15 @@ export default function Page() {
   }, [isLoaded, emailAddress, password])
 
   return (
-    <View>
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '50%',
+        padding: 10,
+        gap: 10,
+      }}
+    >
       <TextInput
         autoCapitalize="none"
         value={emailAddress}

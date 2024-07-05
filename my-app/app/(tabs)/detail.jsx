@@ -1,14 +1,14 @@
-import { useRouter } from 'expo-router'
 import React from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native'
+import { useRouter } from 'expo-router'
 
-const Home = () => {
+const Detail = () => {
   const router = useRouter()
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
-      <Button title="Go to Detail" onPress={() => router.push('/sign-in')} />
+      <Text style={styles.text}>Detail Screen</Text>
+      <Button title="Go Back" onPress={() => router.back()} />
     </View>
   )
 }
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Home
+export default Detail
